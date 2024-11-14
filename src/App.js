@@ -1,24 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import Malha from "./components/malha/index.jsx";
+import Molliers from "./components/molliers/index.jsx";
+import { GlobalCss } from "./styles.tsx";
+
 
 function App() {
   return (
+    <>
+    <GlobalCss />
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Malha />
+      <Molliers />
     </div>
+    </>
   );
 }
 
