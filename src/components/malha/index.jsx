@@ -1,74 +1,120 @@
 import React, { useEffect, useState } from 'react';
-import { getDadosSensores } from '../../services/axiosDados'; // Importa a função para obter os dados da API
-import { Fundo } from './styles'; // Assume que você tem um componente de estilo para o fundo
+import { getDadosSensores } from '../../services/axiosDados';
+import { Fundo } from './styles';
 
 const Malha = () => {
-  const [dados, setDados] = useState(null);
+  const [dados, setDados] = useState({ temperaturas: [], pressoes: [] });
+
+  // Posições fixas para cada valor
+  const posicoesTemperaturas = [
+    { x: 400, y: 100 }, //T1
+    { x: 150, y: 200 }, //T2
+    { x: 250, y: 300 }, //T3
+    { x: 350, y: 400 }, //T4
+    { x: 400, y: 100 }, //T5
+    // { x: 150, y: 200 }, //T6
+    // { x: 250, y: 300 }, //T7
+    // { x: 350, y: 400 }, //T8
+    // { x: 400, y: 100 }, //T9
+    // { x: 150, y: 200 }, //T10
+    // { x: 250, y: 300 }, //T11
+    // { x: 350, y: 400 }, //T12
+    // { x: 400, y: 100 }, //T13
+    // { x: 150, y: 200 }, //T14
+    // { x: 250, y: 300 }, //T15
+    // { x: 350, y: 400 }, //T16
+    // { x: 400, y: 100 }, //T17
+    // { x: 150, y: 200 }, //T18
+    // { x: 250, y: 300 }, //T19
+    // { x: 350, y: 400 }, //T20
+    // { x: 400, y: 100 }, //T21
+    // { x: 150, y: 200 }, //T22
+    // { x: 250, y: 300 }, //T23
+    // { x: 350, y: 400 }, //T24
+    // { x: 400, y: 100 }, //T25
+    // { x: 150, y: 200 }, //T26
+    // { x: 250, y: 300 }, //T27
+    // { x: 350, y: 400 }, //T28
+    // Adicione mais posições conforme necessário
+  ];
+
+  const posicoesPressao = [
+    { x: 100, y: 50 }, //P1
+    { x: 200, y: 150 }, //P2
+    { x: 300, y: 250 }, //P3
+    // { x: 100, y: 50 }, //P4
+    // { x: 200, y: 150 }, //P5
+    // { x: 300, y: 250 }, //P6
+    // { x: 100, y: 50 }, //P7
+    // { x: 200, y: 150 }, //P8
+    // { x: 300, y: 250 }, //P9
+    // { x: 100, y: 50 }, //P10
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
-      const dadosApi = await getDadosSensores(); // Chama a função para buscar os dados
-      console.log('Dados recebidos:', dadosApi); // Verifique no console o que está sendo recebido
-      setDados(dadosApi); // Atualiza o estado com os dados recebidos
+      try {
+        const dadosApi = await getDadosSensores();
+        console.log('Dados recebidos:', dadosApi);
+        setDados(dadosApi);
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      }
     };
 
     fetchData();
   }, []);
 
-  if (!dados) {
-    return <div>Carregando...</div>;
-  }
-
-  // Definindo as posições para as temperaturas
-  const posicoesTemperaturas = dados.temperaturas.map((temp, index) => ({
-    x: (index % 5) * 100,  // Posição X
-    y: Math.floor(index / 5) * 50,  // Posição Y
-    valor: temp,
-  }));
-
-  // Definindo as posições para as pressões
-  const posicoesPressao = dados.pressoes.map((pressao, index) => ({
-    x: (index % 3) * 150,  // Posição X
-    y: Math.floor(index / 3) * 75,  // Posição Y
-    valor: pressao,
-  }));
-
   return (
     <Fundo>
-      {posicoesTemperaturas.map((temp, index) => (
-        <div
-          key={index}
-          style={{
-            position: 'absolute',
-            left: `${temp.x}px`,
-            top: `${temp.y}px`,
-            backgroundColor: 'blue',
-            padding: '5px',
-            color: 'white',
-            borderRadius: '5px',
-          }}
-        >
-          Temp: {temp.valor}°C
-        </div>
-      ))}
-      {posicoesPressao.map((pressao, index) => (
-        <div
-          key={index}
-          style={{
-            position: 'absolute',
-            left: `${pressao.x}px`,
-            top: `${pressao.y}px`,
-            backgroundColor: 'green',
-            padding: '5px',
-            color: 'white',
-            borderRadius: '5px',
-          }}
-        >
-          Pressão: {pressao.valor} bar
-        </div>
-      ))}
+      {/* Renderiza as temperaturas */}
+      {dados.temperaturas.map((temp, index) => {
+        const posicao = posicoesTemperaturas[index];
+        if (!posicao) return null; // Ignora se não houver posição predefinida
+
+        return (
+          <div
+            key={`temp-${index}`}
+            style={{
+              position: 'absolute',
+              left: `${posicao.x}px`,
+              top: `${posicao.y}px`,
+              backgroundColor: 'transparent',
+              padding: '5px',
+              color: 'black',
+              borderRadius: '5px',
+            }}
+          >
+            T{index + 1} {temp}°C
+          </div>
+        );
+      })}
+
+      {/* Renderiza as pressões */}
+      {dados.pressoes.map((pressao, index) => {
+        const posicao = posicoesPressao[index];
+        if (!posicao) return null; // Ignora se não houver posição predefinida
+
+        return (
+          <div
+            key={`pressao-${index}`}
+            style={{
+              position: 'absolute',
+              left: `${posicao.x}px`,
+              top: `${posicao.y}px`,
+              backgroundColor: 'transparent',
+              padding: '5px',
+              color: 'black',
+              borderRadius: '5px',
+            }}
+          >
+            P{index + 1} {pressao} PSI
+          </div>
+        );
+      })}
     </Fundo>
   );
 };
 
 export default Malha;
+
