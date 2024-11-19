@@ -39,33 +39,41 @@ import GraficoA from '../../assets/images/imagem.png';
 import GraficoB from '../../assets/images/imagem2.png';
 import GraficoC from '../../assets/images/imagem3.png';
 import { OrgMolliers } from './styles';
-import React, { useState, useEffect } from 'react';
-import html2canvas from 'html2canvas';
+import React, { useState, useEffect, useCallback, useMemo  } from 'react';
+// import html2canvas from 'html2canvas';
 
 
 const Molliers = ({ salvar, setSalvar  }) => {
-  const imagens = [GraficoA, GraficoB, GraficoC];
+  const imagens = useMemo(() => [GraficoA, GraficoB, GraficoC], []);
   // Estado para forçar atualização
   const [atualizar, setAtualizar] = useState(0);
+
+  const salvarComoImagem = useCallback(() => {
+    imagens.forEach((imagem, index) => {
+      const img = document.createElement('img');
+      img.src = imagem;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        const imagemURL = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = imagemURL;
+        link.download = `imagem_${index + 1}.png`;
+        link.click();
+      };
+      img.onerror = () => console.error(`Erro ao carregar imagem ${index + 1}`);
+    });
+  }, [imagens]);
 
   useEffect(() => {
     if (salvar) {
       salvarComoImagem();
       setSalvar(false); // Resetar o estado após salvar
     }
-  }, [salvar, setSalvar]);
-
-
-  const salvarComoImagem = () => {
-    const componente = document.getElementById('componenteMolliersParaSalvar');
-    html2canvas(componente).then((canvas) => {
-      const imagemURL = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.href = imagemURL;
-      link.download = 'molliers.png';
-      link.click();
-    });
-  };
+  }, [salvar, setSalvar, salvarComoImagem]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
