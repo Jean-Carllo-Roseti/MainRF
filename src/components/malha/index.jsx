@@ -88,7 +88,7 @@ const Malha = ({ salvar,setSalvar }) => {
       const imagemURL = canvas.toDataURL('image/png');
       const link = document.createElement('a');
       link.href = imagemURL;
-      link.download = 'componente.png';
+      link.download = 'Malha.png';
       link.click();
     });
   };
