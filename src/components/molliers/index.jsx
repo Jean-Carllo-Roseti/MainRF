@@ -40,12 +40,32 @@ import GraficoB from '../../assets/images/imagem2.png';
 import GraficoC from '../../assets/images/imagem3.png';
 import { OrgMolliers } from './styles';
 import React, { useState, useEffect } from 'react';
+import html2canvas from 'html2canvas';
 
-const Molliers = () => {
+
+const Molliers = ({ salvar, setSalvar  }) => {
   const imagens = [GraficoA, GraficoB, GraficoC];
-
   // Estado para forçar atualização
   const [atualizar, setAtualizar] = useState(0);
+
+  useEffect(() => {
+    if (salvar) {
+      salvarComoImagem();
+      setSalvar(false); // Resetar o estado após salvar
+    }
+  }, [salvar, setSalvar]);
+
+
+  const salvarComoImagem = () => {
+    const componente = document.getElementById('componenteMolliersParaSalvar');
+    html2canvas(componente).then((canvas) => {
+      const imagemURL = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = imagemURL;
+      link.download = 'molliers.png';
+      link.click();
+    });
+  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -56,7 +76,7 @@ const Molliers = () => {
   }, [atualizar]);
 
   return (
-    <OrgMolliers>
+    <OrgMolliers id='componenteMolliersParaSalvar'>
       {imagens.map((imagem, index) => (
         <li key={index}>
           <img src={imagem} alt={`Gráfico ${index + 1}`} key={atualizar} />

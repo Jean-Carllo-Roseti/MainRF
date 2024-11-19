@@ -1,9 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import html2canvas from 'html2canvas';
 import { getDadosSensores } from '../../services/axiosDados';
 import { Fundo } from './styles';
 
-const Malha = () => {
+const Malha = ({ salvar,setSalvar }) => {
   const [dados, setDados] = useState({ temperaturas: [], pressoes: [] });
+  const [salvando, setSalvando] = useState(false);
+
+  useEffect(() => {
+    if (salvar && !salvando) {
+      setSalvando(true);
+      salvarComoImagem().then(() => setSalvando(false));
+      setSalvar(false);
+    }
+  }, [salvar, setSalvar, salvando]);
+
+  // useEffect(() => {
+  //   if (salvar) {
+  //     salvarComoImagem();
+  //     setSalvar(false);
+  //   }
+  // }, [salvar, setSalvar]);
 
   // Posições fixas para cada valor
   const posicoesTemperaturas = [
@@ -65,54 +82,69 @@ const Malha = () => {
     fetchData();
   }, []);
 
+
+  const salvarComoImagem = () => {
+    return html2canvas(document.getElementById('componenteParaSalvar')).then((canvas) => {
+      const imagemURL = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = imagemURL;
+      link.download = 'componente.png';
+      link.click();
+    });
+  };
+
+
   return (
-    <Fundo>
-      {/* Renderiza as temperaturas */}
-      {dados.temperaturas.map((temp, index) => {
-        const posicao = posicoesTemperaturas[index];
-        if (!posicao) return null; // Ignora se não houver posição predefinida
+    <>
+      <Fundo id="componenteParaSalvar">
+        {/* Renderiza as temperaturas */}
+        {dados.temperaturas.map((temp, index) => {
+          const posicao = posicoesTemperaturas[index];
+          if (!posicao) return null; // Ignora se não houver posição predefinida
 
-        return (
-          <div
-            key={`temp-${index}`}
-            style={{
-              position: 'absolute',
-              left: `${posicao.x}px`,
-              top: `${posicao.y}px`,
-              backgroundColor: 'transparent',
-              padding: '5px',
-              color: 'black',
-              borderRadius: '5px',
-            }}
-          >
-            T{index + 1} {temp}°C
-          </div>
-        );
-      })}
+          return (
+            <div
+              key={`temp-${index}`}
+              style={{
+                position: 'absolute',
+                left: `${posicao.x}px`,
+                top: `${posicao.y}px`,
+                backgroundColor: 'transparent',
+                padding: '5px',
+                color: 'black',
+                borderRadius: '5px',
+              }}
+            >
+              T{index + 1} {temp}°C
+            </div>
+          );
+        })}
 
-      {/* Renderiza as pressões */}
-      {dados.pressoes.map((pressao, index) => {
-        const posicao = posicoesPressao[index];
-        if (!posicao) return null; // Ignora se não houver posição predefinida
+        {/* Renderiza as pressões */}
+        {dados.pressoes.map((pressao, index) => {
+          const posicao = posicoesPressao[index];
+          if (!posicao) return null; // Ignora se não houver posição predefinida
 
-        return (
-          <div
-            key={`pressao-${index}`}
-            style={{
-              position: 'absolute',
-              left: `${posicao.x}px`,
-              top: `${posicao.y}px`,
-              backgroundColor: 'transparent',
-              padding: '5px',
-              color: 'black',
-              borderRadius: '5px',
-            }}
-          >
-            P{index + 1} {pressao} PSI
-          </div>
-        );
-      })}
-    </Fundo>
+          return (
+            <div
+              key={`pressao-${index}`}
+              style={{
+                position: 'absolute',
+                left: `${posicao.x}px`,
+                top: `${posicao.y}px`,
+                backgroundColor: 'transparent',
+                padding: '5px',
+                color: 'black',
+                borderRadius: '5px',
+              }}
+            >
+              P{index + 1} {pressao} PSI
+            </div>
+          );
+        })}
+      </Fundo>
+      {/* <button onClick={salvarComoImagem}>Salvar e Copiar Imagens</button> */}
+    </>
   );
 };
 
