@@ -81,6 +81,7 @@ def plotar_diagrama_mollier(conjunto_dados=5):
     plt.xlabel('Entalpia (BTU/LB)')  # Nome do eixo X
     plt.ylabel('Pressao (PSIA)')  # Nome do eixo Y
     # plt.title('Diagrama de Mollier para R-134a')  # Título do gráfico
+    plt.title('Diagrama 3')  # Título do gráfico
 
     plt.xlim(125, 600)  # Limites reais do eixo X (pressão em kPa) 
 

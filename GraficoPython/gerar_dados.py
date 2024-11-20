@@ -29,6 +29,5 @@ def add_headers(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     return response
 
-
 if __name__ == '__main__':
     app.run(port=5000)
