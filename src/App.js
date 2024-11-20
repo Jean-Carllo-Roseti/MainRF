@@ -55,7 +55,7 @@ function App() {
       <div className="App">
         <Malha salvar={salvarMalha} setSalvar={setSalvarMalha} />
         <Molliers salvar={salvarMolliers} setSalvar={setSalvarMolliers} />
-        <button onClick={handleSalvarTudo}>Salvar Tudo</button>
+        <button className="botao-salvar"  onClick={handleSalvarTudo}>Save</button>
       </div>
     </>
   );

@@ -3,9 +3,40 @@ import html2canvas from 'html2canvas';
 import { getDadosSensores } from '../../services/axiosDados';
 import { Fundo } from './styles';
 
+const getTimestamp = () => {
+  const data = new Date();
+  const dia = String(data.getDate()).padStart(2, '0');
+  const mes = String(data.getMonth() + 1).padStart(2, '0');
+  const ano = data.getFullYear();
+  const hora = String(data.getHours()).padStart(2, '0');
+  const minuto = String(data.getMinutes()).padStart(2, '0');
+  const segundo = String(data.getSeconds()).padStart(2, '0');
+
+  return  (
+    <span>
+      {dia}/{mes}/{ano}
+      <br />
+      {hora}:{minuto}:{segundo}
+    </span>
+  );
+};
+
 const Malha = ({ salvar,setSalvar }) => {
   const [dados, setDados] = useState({ temperaturas: [], pressoes: [] });
   const [salvando, setSalvando] = useState(false);
+  const [timestamp, setTimestamp] = useState(getTimestamp());
+
+  const posicoesTimestamps = [
+    { x: 1195, y: 410 },
+  ];
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTimestamp(getTimestamp());
+    }, 1000); // Atualiza a cada 1000 milissegundos (1 segundo)
+
+    return () => clearInterval(intervalId); // Limpa o intervalo ao desmontar
+  }, []); // Executa uma vez quando o componente é montado
 
   useEffect(() => {
     if (salvar && !salvando) {
@@ -30,7 +61,7 @@ const Malha = ({ salvar,setSalvar }) => {
     { x: 100, y: 160 }, //T4
     { x: 100, y: 130 }, //T5 
     { x: 380, y: 300 }, //T6 BOX2
-    { x: 380, y: 390 }, //T7
+    { x: 380, y: 420 }, //T7 
     { x: 270, y: 420 }, //T8
     { x: 430, y: 365 }, //T9
     { x: 430, y: 330 }, //T10
@@ -56,7 +87,7 @@ const Malha = ({ salvar,setSalvar }) => {
     { x: 205, y: 132 }, //P1 BOX1
     { x: 205, y: 220 }, //P2
     { x: 380, y: 260 }, //P3 BOX2
-    { x: 380, y: 420 }, //P4
+    { x: 380, y: 390 }, //P4
     { x: 835, y: 315 }, //P5 BOX3
     { x: 835, y: 370 }, //P6
     { x: 650, y: 215 }, //P7 BOX4
@@ -70,16 +101,18 @@ const Malha = ({ salvar,setSalvar }) => {
     { x: 190, y: 23, texto: 'Suction - Gasous Freon' }, //info Legenda Malha
     { x: 190, y: 47, texto: 'Pressure - Gasous Freon' },
     { x: 190, y: 70, texto: 'Pressure - Liquidi Freon' }, 
-    // { x: 200, y: 200, texto: 'P2, P3,' }, VERIFICAR A QUANTIDADE DE TRANSUTOR DE PRESSÃO 
+    { x: 550, y: 65, texto: 'P2, P4, P6, P7, P8 SB69-500V' },
+    { x: 550, y: 45, texto: 'P1, P3, P5, P9 SB69-100V' }, 
+    { x: 549, y: 26, texto: 'Sensor de Temperatura TF43' }, 
     { x: 125, y: 120, texto: 'Air In' }, //BOX 1
     { x: 125, y: 150, texto: 'Air Out' },
     { x: 320, y: 138, texto: 'Out Refr' },
     { x: 360, y: 225, texto: 'In Refr' },
-    { x: 100, y: 280, texto: 'Evaporator Module' }, 
+    { x: 105, y: 280, texto: 'Evaporator Module' }, 
 
     { x: 450, y: 318, texto: 'Air Out' }, //BoOX2
     { x: 450, y: 350, texto: 'Air In' }, 
-    { x: 250, y: 350, texto: 'Evaporator Module' }, 
+    { x: 235, y: 350, texto: 'Evaporator Module' }, 
 
     { x: 710, y: 298, texto: 'Air In' }, //BOX3
     { x: 710, y: 325, texto: 'Air Out' }, 
@@ -90,7 +123,7 @@ const Malha = ({ salvar,setSalvar }) => {
     { x: 900, y: 200, texto: 'Air In' }, //BOX4
     { x: 800, y: 255, texto: 'Temp In' }, 
     { x: 800, y: 148, texto: 'Temp Out' }, 
-    { x: 710, y: 90, texto: 'Condenser Assy' },
+    { x: 730, y: 90, texto: 'Condenser Assy' },
 
     { x: 630, y: 145, texto: 'In ' }, //Osmose Linha Azul
     { x: 550, y: 145, texto: 'Out ' }, 
@@ -99,10 +132,16 @@ const Malha = ({ salvar,setSalvar }) => {
     { x: 1025, y: 205, texto: 'Freon Out ' }, 
     { x: 1150, y: 295, texto: 'Compressor Module ' }, 
 
-    // { x: 1025, y: 205, texto: {data = DD/MM/YY} }, 
-    // { x: 1150, y: 295, texto:  {tIMEsTAMP = HH:MM:SS} }, 
   ];
 
+  const posicoesInputs = [
+    { x: 20, y: 280}, //BOX1
+    { x: 150, y: 350 },//BOX2 980, y: 400
+    { x: 900, y: 400 }, //BOX3
+    { x: 640, y: 90 }, //BO4
+    { x: 1072, y: 295, } //MOTOR
+    // Adicione mais objetos conforme necessário
+  ];
 
   // //mantem parado
   useEffect(() => {
@@ -165,6 +204,7 @@ const Malha = ({ salvar,setSalvar }) => {
                 padding: '5px',
                 color: 'black',
                 borderRadius: '5px',
+                fontSize: '14px'
               }}
             >
               T{index + 1} {temp}°C
@@ -188,6 +228,7 @@ const Malha = ({ salvar,setSalvar }) => {
                 padding: '5px',
                 color: 'black',
                 borderRadius: '5px',
+                fontSize: '14px'
               }}
             >
               P{index + 1} {pressao} PSI
@@ -215,6 +256,42 @@ const Malha = ({ salvar,setSalvar }) => {
         </div>
       ))}
 
+      <div style={{ position: 'relative' }}>
+          {posicoesInputs.map((input, index) => (
+            <input
+              key={`input-${index}`}
+              style={{
+                position: 'absolute',
+                left: `${input.x}px`,
+                top: `${input.y}px`,
+                padding: '2px',
+                fontSize: '10px',
+                borderRadius: '2px',
+                backgroundColor: '#ccc',
+                border: 'none', //1px solid #ccc',
+                width: '120px'
+              }}
+              type="text"
+              placeholder={input.placeholder}
+            />
+          ))}
+        </div>
+        
+        
+      {posicoesTimestamps.map((posicao, index) => (
+        <span
+          key={`timestamp-${index}`}
+          style={{
+            position: 'absolute',
+            left: `${posicao.x}px`,
+            top: `${posicao.y}px`,
+            fontSize: '14px',
+            color: posicao.cor
+          }}
+        >
+          {timestamp} 
+        </span>
+      ))}
       </Fundo>
       {/* <button onClick={salvarComoImagem}>Salvar e Copiar Imagens</button> */}
     </>
