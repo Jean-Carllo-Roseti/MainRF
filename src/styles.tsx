@@ -7,9 +7,9 @@ export const GlobalCss = createGlobalStyle`
   width: 1200px; /* Define a largura fixa de 1200px */
   padding: 0; /* Remove o padding de todos os elementos */
   box-sizing: border-box; /* Inclui o padding e border no cálculo da largura */
+
 }
-
-
+  
 .botao-salvar {
   position: fixed; /* Fixa a posição */
   top: 10px; /* Distância do topo */

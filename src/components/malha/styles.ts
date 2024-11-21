@@ -9,4 +9,6 @@ export const Fundo = styled.div`
   height: 438px;
   margin: 0 auto;
   margin-top: 20px;
+  position: relative;
+  
 `;
