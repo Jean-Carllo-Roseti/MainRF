@@ -97,7 +97,7 @@ const Malha = ({ salvar,setSalvar }) => {
     { x: 115, y: 50, texto: 'Pressure - Liquidi Freon' }, 
     { x: 463, y: 25, texto: 'P2, P4, P6, P7, P8 SB69-500V' },
     { x: 463, y: 45, texto: 'P1, P3, P5, P9 SB69-100V' }, 
-    { x: 463, y: 5, texto: 'Sensor de Temperatura TF43' }, 
+    { x: 463, y: 5, texto: 'Sensor of Temperature TF43' }, 
     { x: 40, y: 95, texto: 'Air In' }, //BOX 1
     { x: 40, y: 125, texto: 'Air Out' },
     { x: 245, y: 115, texto: 'Out Refr' },
