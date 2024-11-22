@@ -22,10 +22,18 @@ const getTimestamp = () => {
   );
 };
 
-const Malha = ({ salvar,setSalvar }) => {
+const Malha = ({ salvar, setSalvar, setTextAreaValues  }) => {
   const [dados, setDados] = useState({ temperaturas: [], pressoes: [] });
   const [salvando, setSalvando] = useState(false);
   const [timestamp, setTimestamp] = useState(getTimestamp());
+  const [serieNumber, setSerieNumber] = useState(["", ""]);
+
+  const handleInputChange = (index, value) => {
+    const novosDados = [...serieNumber];
+    novosDados[index] = value; // Atualiza o valor do índice específico
+    setSerieNumber(novosDados); // Atualiza o estado local
+    setTextAreaValues(novosDados); // Passa os dados para o componente pai
+  };
 
   const posicoesTimestamps = [
     { x: 1120, y: 398 },
@@ -130,7 +138,7 @@ const Malha = ({ salvar,setSalvar }) => {
 
   const posicoesInputs = [
     { x: 25, y: 280, valor: ''}, //BOX1
-    { x: 163, y: 340, valor: ''},//BOX2 980, y: 400
+    { x: 163, y: 340, valor: ''},//BOX2 
     { x: 903, y: 410, valor: ''}, //BOX3
     { x: 640, y: 90, valor: ''}, //BO4
     { x: 1072, y: 320, valor: ''} //MOTOR
@@ -138,35 +146,35 @@ const Malha = ({ salvar,setSalvar }) => {
   ];
 
   // //mantem parado
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const dadosApi = await getDadosSensores();
-        console.log('Dados recebidos:', dadosApi);
-        setDados(dadosApi);
-      } catch (error) {
-        console.error('Erro ao buscar dados:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
- //TEMPO REAL
   // useEffect(() => {
-  //   const atualizarDados = async () => {
+  //   const fetchData = async () => {
   //     try {
   //       const dadosApi = await getDadosSensores();
+  //       console.log('Dados recebidos:', dadosApi);
   //       setDados(dadosApi);
   //     } catch (error) {
   //       console.error('Erro ao buscar dados:', error);
   //     }
   //   };
-  
-  //   const intervalId = setInterval(atualizarDados, 1300); // Atualiza a cada 1 segundo
-  
-  //   return () => clearInterval(intervalId); // Limpa o intervalo quando o componente é desmontado
+
+  //   fetchData();
   // }, []);
+
+ //TEMPO REAL
+  useEffect(() => {
+    const atualizarDados = async () => {
+      try {
+        const dadosApi = await getDadosSensores();
+        setDados(dadosApi);
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      }
+    };
+  
+    const intervalId = setInterval(atualizarDados, 1300); // Atualiza a cada 1 segundo
+  
+    return () => clearInterval(intervalId); // Limpa o intervalo quando o componente é desmontado
+  }, []);
 
   //^^^^^^^^^^^^^^^^IMPORTANTE N EXCLUIR^^^^^^^^^^^^^^^^^^^^^^
 
@@ -300,11 +308,12 @@ const salvarComoImagem = () => {
           {palavra.texto}
         </div>
       ))}
-
         
     {posicoesInputs.map((input, index) => (
       <textarea
         key={`input-${index}`}
+        value={serieNumber[index] || input.valor} // Exibe o valor do estado correspondente
+        onChange={(e) => handleInputChange(index, e.target.value)} // Atualiza o valor ao digitar
         style={{
           position: 'absolute',
           left: `${input.x}px`,
@@ -313,8 +322,6 @@ const salvarComoImagem = () => {
           borderRadius: '2px',
           backgroundColor: '#ccc',
           border: 'none',
-          // height: '14px',
-          // padding: '2px',
           width: '100px',
           resize: 'none',
           overflow: 'hidden',
@@ -343,7 +350,6 @@ const salvarComoImagem = () => {
         </span>
       ))}
       </Fundo>
-      {/* <button onClick={salvarComoImagem}>Salvar e Copiar Imagens</button> */}
     </>
   );
 };

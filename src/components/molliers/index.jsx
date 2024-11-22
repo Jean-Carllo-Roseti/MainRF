@@ -69,17 +69,15 @@ import React, { useState, useEffect, useCallback, useMemo, useRef  } from 'react
 
 const generateTimestamp = () => {
   const now = new Date();
-  
   // Formata a data como DD/MM/YYYY
   const date = now.toLocaleDateString('pt-BR');
-  
   // Formata a hora como HH:mm:ss
   const time = now.toLocaleTimeString('pt-BR');
-  
+
   return `${date} - ${time}`;
 };
 
-const Molliers = ({ salvar, setSalvar }) => {
+const Molliers = ({ salvar, setSalvar, textAreaValues  }) => {
   const imagens = useMemo(() => [GraficoA, GraficoB, GraficoC], []);
   // eslint-disable-next-line no-unused-vars
   const [atualizar, setAtualizar] = useState(0);
@@ -119,8 +117,8 @@ const salvarComoImagem = useCallback(() => {
     const img = new Image();
     img.src = imagem;
     img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
 
       // Define o tamanho do canvas baseado na imagem
       canvas.width = img.width;
@@ -129,30 +127,34 @@ const salvarComoImagem = useCallback(() => {
       // Desenha a imagem no canvas
       ctx.drawImage(img, 0, 0);
 
-      // Adiciona o texto dinâmico no canvas
+      // Adiciona o texto dinâmico na mesma linha
       const timestamp = generateTimestamp();
-      ctx.font = '16px Arial';
-      ctx.fillStyle = 'white'; // Cor do texto
-      ctx.textAlign = 'center';
-      ctx.fillText(timestamp, canvas.width / 2, img.height + 20); // Centraliza o texto
+      const textAreaValue = textAreaValues[index] || ""; // Junta os valores do textArea ou uma string vazia
+      const combinedText = `SN:${textAreaValue} - Data:${timestamp}`; // Combina timestamp e valores do textarea
+
+      ctx.font = "16px Arial";
+      ctx.fillStyle = "white"; // Cor do texto
+      ctx.textAlign = "center";
+      ctx.fillText(combinedText, canvas.width / 2, img.height + 20); // Centraliza o texto combinado na mesma linha
 
       // Gera a URL da imagem com o texto
-      const imagemURL = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
+      const imagemURL = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
 
       link.href = imagemURL;
       link.download = `imagem_${index + 1}.png`;
       link.click();
-
       link.remove();
 
       // Limpeza do canvas
       canvas.width = 0;
       canvas.height = 0;
     };
-    img.onerror = () => console.error(`Erro ao carregar imagem ${index + 1}`);
+    img.onerror = () =>
+      console.error(`Erro ao carregar imagem ${index + 1}`);
   });
-}, [imagens]);
+}, [imagens, textAreaValues]);
+
   // ^muito bom^^^^^^^^^^^^^^^~
 
   // const salvarComoImagem = useCallback(() => {
