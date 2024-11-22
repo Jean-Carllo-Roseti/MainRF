@@ -21,13 +21,13 @@ def gerar_dados_mollier(conjunto_dados=1):
         },
         2: {
             'temperatura_1': 260.15,
-            'pressao_1': 239.87,
+            'pressao_1': 200.87,
             'temperatura_2': 353.55,
-            'pressao_2': 1800.79,
+            'pressao_2': 1500.79,
             'temperatura_3': 290.55,
-            'pressao_3': 1700.55,
+            'pressao_3': 2000.55,
             'temperatura_4': 294.85,
-            'pressao_4': 200.03
+            'pressao_4': 250.03
         }
     }
 
@@ -126,4 +126,4 @@ if __name__ == "__main__":
     while True:
         for conjunto_dados in conjuntos_de_dados:
             plotar_diagrama_mollier(conjunto_dados)
-            time.sleep(0.5)  # Aguarda 5 segundos antes de alternar
+            time.sleep(1)  # Aguarda 5 segundos antes de alternar
