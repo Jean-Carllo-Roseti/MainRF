@@ -1,93 +1,197 @@
-// import GraficoA from '../../assets/images/imagem.png'
-// import GraficoB from '../../assets/images/imagem2.png'
-// import GraficoC from '../../assets/images/imagem3.png'
-// import { OrgMolliers } from './styles'
-// import React, { useState, useEffect } from 'react';
+// import GraficoA from '../../assets/images/imagem.png';
+// import GraficoB from '../../assets/images/imagem2.png';
+// import GraficoC from '../../assets/images/imagem3.png';
+// import { OrgMolliers } from './styles';
+// import React, { useState, useEffect, useCallback, useMemo  } from 'react';
+// // import html2canvas from 'html2canvas';
 
-// const Molliers = () => {
-//     const imagens = [
-//         GraficoA,  // Substitua com o caminho correto das suas imagens
-//         GraficoB,
-//         GraficoC
-//     ];
-  
-//     const [currentIndex, setCurrentIndex] = useState(0);
-  
-//     useEffect(() => {
-//       const intervalId = setInterval(() => {
-//         setCurrentIndex((prevIndex) => (prevIndex + 1) % imagens.length);
-//       }, 1000); // Troca a cada 1 segundo
-  
-//       // Limpeza do intervalo quando o componente for desmontado
-//       return () => clearInterval(intervalId);
-//     }, [imagens.length]); // O array vazio significa que o efeito ocorre uma vez ao montar o componente
-  
-//     return (
-//       <OrgMolliers>
-//         {imagens.map((imagem, index) => (
-//           <li key={index} style={{ display: currentIndex === index ? 'block' : 'none' }}>
-//             <img src={imagem} alt={`Gráfico ${index + 1}`} />
-//           </li>
-//         ))}
-//       </OrgMolliers>
-//     );
-//   };
-  
-//   export default Molliers;
+
+// const Molliers = ({ salvar, setSalvar }) => {
+//   const imagens = useMemo(() => [GraficoA, GraficoB, GraficoC], []);
+//   // eslint-disable-next-line no-unused-vars
+//   const [atualizar, setAtualizar] = useState(0);
+
+//   const salvarComoImagem = useCallback(() => {
+//     imagens.forEach((imagem, index) => {
+//       const img = document.createElement('img');
+//       img.src = imagem;
+//       img.onload = () => {
+//         const canvas = document.createElement('canvas');
+//         canvas.width = img.width;
+//         canvas.height = img.height;
+//         const ctx = canvas.getContext('2d');
+//         ctx.drawImage(img, 0, 0);
+//         const imagemURL = canvas.toDataURL('image/png');
+//         const link = document.createElement('a');
+//         link.href = imagemURL;
+//         link.download = `imagem_${index + 1}.png`;
+//         link.click();
+//       };
+//       img.onerror = () => console.error(`Erro ao carregar imagem ${index + 1}`);
+//     });
+//   }, [imagens]);
+
+//   useEffect(() => {
+//     if (salvar) {
+//       salvarComoImagem();
+//       setSalvar(false);
+//     }
+//   }, [salvar, setSalvar, salvarComoImagem]);
+
+//   useEffect(() => {
+//     const intervalId = setInterval(() => {
+//       setAtualizar((prev) => prev + 1);
+//     }, 600);
+
+//     return () => clearInterval(intervalId);
+//   }, []);
+
+//   return (
+//     <OrgMolliers id='componenteMolliersParaSalvar'>
+//       {imagens.map((imagem, index) => (
+//         <li key={index}>
+//           <img src={imagem} alt={`Gráfico ${index + 1}`} />
+//         </li>
+//       ))}
+//     </OrgMolliers>
+//   );
+// };
+
+// export default Molliers;
 
 import GraficoA from '../../assets/images/imagem.png';
 import GraficoB from '../../assets/images/imagem2.png';
 import GraficoC from '../../assets/images/imagem3.png';
 import { OrgMolliers } from './styles';
-import React, { useState, useEffect, useCallback, useMemo  } from 'react';
 // import html2canvas from 'html2canvas';
+import React, { useState, useEffect, useCallback, useMemo, useRef  } from 'react';
 
 
-const Molliers = ({ salvar, setSalvar  }) => {
+const generateTimestamp = () => {
+  const now = new Date();
+  
+  // Formata a data como DD/MM/YYYY
+  const date = now.toLocaleDateString('pt-BR');
+  
+  // Formata a hora como HH:mm:ss
+  const time = now.toLocaleTimeString('pt-BR');
+  
+  return `${date} - ${time}`;
+};
+
+const Molliers = ({ salvar, setSalvar }) => {
   const imagens = useMemo(() => [GraficoA, GraficoB, GraficoC], []);
-  // Estado para forçar atualização
+  // eslint-disable-next-line no-unused-vars
   const [atualizar, setAtualizar] = useState(0);
 
-  const salvarComoImagem = useCallback(() => {
-    imagens.forEach((imagem, index) => {
-      const img = document.createElement('img');
-      img.src = imagem;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        const imagemURL = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.href = imagemURL;
-        link.download = `imagem_${index + 1}.png`;
-        link.click();
-      };
-      img.onerror = () => console.error(`Erro ao carregar imagem ${index + 1}`);
-    });
-  }, [imagens]);
+  const intervalRef = useRef(null);
+
+  // const salvarComoImagem = useCallback(() => {
+  //   imagens.forEach((imagem, index) => {
+  //     const img = new Image();
+  //     img.src = imagem;
+  //     img.onload = () => {
+  //       const canvas = document.createElement('canvas');
+  //       canvas.width = img.width;
+  //       canvas.height = img.height;
+  //       const ctx = canvas.getContext('2d');
+  //       ctx.drawImage(img, 0, 0);
+  //       const imagemURL = canvas.toDataURL('image/png');
+  //       const link = document.createElement('a');
+  //       link.href = imagemURL;
+  //       link.download = `imagem_${index + 1}.png`;
+  //       link.click();
+
+  //       link.remove();
+
+  //       // Limpeza do canvas
+  //       canvas.width = 0;
+  //       canvas.height = 0;
+
+  //     };
+  //     img.onerror = () => console.error(`Erro ao carregar imagem ${index + 1}`);
+  //   });
+  // }, [imagens]);
+// em uso^^^^^^^^^^^^^^^^^^^^^
+
+const salvarComoImagem = useCallback(() => {
+  imagens.forEach((imagem, index) => {
+    const img = new Image();
+    img.src = imagem;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Define o tamanho do canvas baseado na imagem
+      canvas.width = img.width;
+      canvas.height = img.height + 30; // Adiciona espaço para o texto
+
+      // Desenha a imagem no canvas
+      ctx.drawImage(img, 0, 0);
+
+      // Adiciona o texto dinâmico no canvas
+      const timestamp = generateTimestamp();
+      ctx.font = '16px Arial';
+      ctx.fillStyle = 'white'; // Cor do texto
+      ctx.textAlign = 'center';
+      ctx.fillText(timestamp, canvas.width / 2, img.height + 20); // Centraliza o texto
+
+      // Gera a URL da imagem com o texto
+      const imagemURL = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+
+      link.href = imagemURL;
+      link.download = `imagem_${index + 1}.png`;
+      link.click();
+
+      link.remove();
+
+      // Limpeza do canvas
+      canvas.width = 0;
+      canvas.height = 0;
+    };
+    img.onerror = () => console.error(`Erro ao carregar imagem ${index + 1}`);
+  });
+}, [imagens]);
+  // ^muito bom^^^^^^^^^^^^^^^~
+
+  // const salvarComoImagem = useCallback(() => {
+  //   // Seleciona todos os <li> dentro do OrgMolliers
+  //   const elementos = document.querySelectorAll('#componenteMolliersParaSalvar li');
+  
+  //   elementos.forEach((elemento, index) => {
+  //     html2canvas(elemento).then((canvas) => {
+  //       // Cria a URL da imagem capturada
+  //       const imagemURL = canvas.toDataURL('image/png');
+  //       const link = document.createElement('a');
+  //       link.href = imagemURL;
+  //       link.download = `grafico_${index + 1}.png`; // Nome do arquivo baseado no índice
+  //       link.click();
+  //     });
+  //   });
+  // }, []);
+  // ^^^possivel^^^^
 
   useEffect(() => {
     if (salvar) {
       salvarComoImagem();
-      setSalvar(false); // Resetar o estado após salvar
+      setSalvar(false);
     }
   }, [salvar, setSalvar, salvarComoImagem]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setAtualizar(atualizar + 1); // Incrementa para forçar atualização
-    }, 600); // Atualiza a cada 1 segundo
+    intervalRef.current = setInterval(() => {
+      setAtualizar((prev) => prev + 1);
+    }, 1000); // Intervalo aumentado para 1 segundo, ajuste conforme necessário.
 
-    return () => clearInterval(intervalId);
-  }, [atualizar]);
+    return () => clearInterval(intervalRef.current); // Limpeza do intervalo
+  }, []);
 
   return (
     <OrgMolliers id='componenteMolliersParaSalvar'>
       {imagens.map((imagem, index) => (
         <li key={index}>
-          <img src={imagem} alt={`Gráfico ${index + 1}`} key={atualizar} />
+          <img src={imagem} alt={`Gráfico ${index + 1}`} />
         </li>
       ))}
     </OrgMolliers>
