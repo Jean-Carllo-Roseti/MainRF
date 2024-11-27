@@ -1,64 +1,3 @@
-// import GraficoA from '../../assets/images/imagem.png';
-// import GraficoB from '../../assets/images/imagem2.png';
-// import GraficoC from '../../assets/images/imagem3.png';
-// import { OrgMolliers } from './styles';
-// import React, { useState, useEffect, useCallback, useMemo  } from 'react';
-// // import html2canvas from 'html2canvas';
-
-
-// const Molliers = ({ salvar, setSalvar }) => {
-//   const imagens = useMemo(() => [GraficoA, GraficoB, GraficoC], []);
-//   // eslint-disable-next-line no-unused-vars
-//   const [atualizar, setAtualizar] = useState(0);
-
-//   const salvarComoImagem = useCallback(() => {
-//     imagens.forEach((imagem, index) => {
-//       const img = document.createElement('img');
-//       img.src = imagem;
-//       img.onload = () => {
-//         const canvas = document.createElement('canvas');
-//         canvas.width = img.width;
-//         canvas.height = img.height;
-//         const ctx = canvas.getContext('2d');
-//         ctx.drawImage(img, 0, 0);
-//         const imagemURL = canvas.toDataURL('image/png');
-//         const link = document.createElement('a');
-//         link.href = imagemURL;
-//         link.download = `imagem_${index + 1}.png`;
-//         link.click();
-//       };
-//       img.onerror = () => console.error(`Erro ao carregar imagem ${index + 1}`);
-//     });
-//   }, [imagens]);
-
-//   useEffect(() => {
-//     if (salvar) {
-//       salvarComoImagem();
-//       setSalvar(false);
-//     }
-//   }, [salvar, setSalvar, salvarComoImagem]);
-
-//   useEffect(() => {
-//     const intervalId = setInterval(() => {
-//       setAtualizar((prev) => prev + 1);
-//     }, 600);
-
-//     return () => clearInterval(intervalId);
-//   }, []);
-
-//   return (
-//     <OrgMolliers id='componenteMolliersParaSalvar'>
-//       {imagens.map((imagem, index) => (
-//         <li key={index}>
-//           <img src={imagem} alt={`Gráfico ${index + 1}`} />
-//         </li>
-//       ))}
-//     </OrgMolliers>
-//   );
-// };
-
-// export default Molliers;
-
 import GraficoA from '../../assets/images/imagem.png';
 import GraficoB from '../../assets/images/imagem2.png';
 import GraficoC from '../../assets/images/imagem3.png';
@@ -83,34 +22,6 @@ const Molliers = ({ salvar, setSalvar, textAreaValues  }) => {
   const [atualizar, setAtualizar] = useState(0);
 
   const intervalRef = useRef(null);
-
-  // const salvarComoImagem = useCallback(() => {
-  //   imagens.forEach((imagem, index) => {
-  //     const img = new Image();
-  //     img.src = imagem;
-  //     img.onload = () => {
-  //       const canvas = document.createElement('canvas');
-  //       canvas.width = img.width;
-  //       canvas.height = img.height;
-  //       const ctx = canvas.getContext('2d');
-  //       ctx.drawImage(img, 0, 0);
-  //       const imagemURL = canvas.toDataURL('image/png');
-  //       const link = document.createElement('a');
-  //       link.href = imagemURL;
-  //       link.download = `imagem_${index + 1}.png`;
-  //       link.click();
-
-  //       link.remove();
-
-  //       // Limpeza do canvas
-  //       canvas.width = 0;
-  //       canvas.height = 0;
-
-  //     };
-  //     img.onerror = () => console.error(`Erro ao carregar imagem ${index + 1}`);
-  //   });
-  // }, [imagens]);
-// em uso^^^^^^^^^^^^^^^^^^^^^
 
 const salvarComoImagem = useCallback(() => {
   imagens.forEach((imagem, index) => {
@@ -154,25 +65,6 @@ const salvarComoImagem = useCallback(() => {
       console.error(`Erro ao carregar imagem ${index + 1}`);
   });
 }, [imagens, textAreaValues]);
-
-  // ^muito bom^^^^^^^^^^^^^^^~
-
-  // const salvarComoImagem = useCallback(() => {
-  //   // Seleciona todos os <li> dentro do OrgMolliers
-  //   const elementos = document.querySelectorAll('#componenteMolliersParaSalvar li');
-  
-  //   elementos.forEach((elemento, index) => {
-  //     html2canvas(elemento).then((canvas) => {
-  //       // Cria a URL da imagem capturada
-  //       const imagemURL = canvas.toDataURL('image/png');
-  //       const link = document.createElement('a');
-  //       link.href = imagemURL;
-  //       link.download = `grafico_${index + 1}.png`; // Nome do arquivo baseado no índice
-  //       link.click();
-  //     });
-  //   });
-  // }, []);
-  // ^^^possivel^^^^
 
   useEffect(() => {
     if (salvar) {
