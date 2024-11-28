@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import html2canvas from 'html2canvas';
 import { getDadosSensores } from '../../services/axiosDados';
-import { Fundo, Relogio, CampoInput, PalavrasDiv, ConteudoPalvras, TemperaturaDiv, TemperaturaTexto, PressaoDiv, PressaoTexto, TemperaturaValor, PressaoValor } from './styles';
+import { Fundo,
+   Relogio,
+   CampoInput,
+   PalavrasDiv,
+   ConteudoPalvras,
+   TemperaturaDiv,
+   TemperaturaTexto,
+   PressaoDiv,
+   PressaoTexto,
+   TemperaturaValor,
+   PressaoValor } from './styles';
 
 const getTimestamp = () => {
   const data = new Date();
@@ -97,11 +107,10 @@ const Malha = ({ salvar, setSalvar, setTextAreaValues  }) => {
     // { x: 100, y: 50 }, //P10
   ];
 
-
   const posicoesPalavras = [
-    { x: 115, y: 5, texto: 'Suction - Gasous Freon' }, //info Legenda Malha
-    { x: 115, y: 28, texto: 'Pressure - Gasous Freon' },
-    { x: 115, y: 50, texto: 'Pressure - Liquidi Freon' }, 
+    { x: 120, y: 10, texto: 'Suction - Gasous Freon' }, //info Legenda Malha
+    { x: 120, y: 33, texto: 'Pressure - Gasous Freon' },
+    { x: 120, y: 55, texto: 'Pressure - Liquidi Freon' }, 
     { x: 463, y: 25, texto: 'P2, P4, P6, P7, P8 SB69-500V' },
     { x: 463, y: 45, texto: 'P1, P3, P5, P9 SB69-100V' }, 
     { x: 463, y: 5, texto: 'Sensor of Temperature TF43' }, 
