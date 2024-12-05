@@ -6,6 +6,7 @@ from CoolProp.CoolProp import PropsSI
 from CoolProp.Plots import PropertyPlot
 import os
 import time
+import gc  # Para Garbage Collector
 
 def gerar_dados_mollier(conjunto_dados=1):
     dados = {
@@ -119,6 +120,10 @@ def plotar_diagrama_mollier(conjunto_dados=1):
     caminho_imagem = r'C:\ProgJean\MainFront\frontend\src\assets\images\imagem.png'
 
     plot.savefig(caminho_imagem) 
+    plt.close('all')  # Libera os recursos de plotagem
+
+    # Forçar coleta de lixo
+    gc.collect()
     # plot.show()
     
 if __name__ == "__main__":
